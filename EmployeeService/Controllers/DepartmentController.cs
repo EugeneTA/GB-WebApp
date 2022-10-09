@@ -5,6 +5,7 @@ using EmployeeService.Services.Repositories.Impl;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
+using EmployeeServiceData;
 
 namespace EmployeeService.Controllers
 {
@@ -40,7 +41,7 @@ namespace EmployeeService.Controllers
         [HttpPost("create")]
         public ActionResult<int> CreateDepartment([FromQuery] string description)
         {
-            return Ok(_departmentRepository.Create(new Models.Department
+            return Ok(_departmentRepository.Create(new Department
             {
                 Description = description
             }));

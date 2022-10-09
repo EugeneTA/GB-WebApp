@@ -2,6 +2,7 @@
 using EmployeeService.Models;
 using EmployeeService.Models.Dto;
 using EmployeeService.Services.Repositories;
+using EmployeeServiceData;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,7 +41,7 @@ namespace EmployeeService.Controllers
         [HttpPost("employee-types/create")]
         public ActionResult<int> CreateEmployeeType([FromQuery] string description)
         {
-            return Ok(_employeeTypeRepository.Create(new Models.EmployeeType
+            return Ok(_employeeTypeRepository.Create(new EmployeeType
             {
                 Description = description
             }));
