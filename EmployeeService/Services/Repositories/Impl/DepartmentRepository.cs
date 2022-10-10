@@ -1,56 +1,57 @@
 ﻿using EmployeeService.Models;
+using EmployeeServiceData;
 
 namespace EmployeeService.Services.Repositories.Impl
 {
     public class DepartmentRepository : IDepartmentRepository
     {
+        private readonly EmployeeServiceDbContext _dbContext;
+
+        public DepartmentRepository(EmployeeServiceDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
         public Guid Create(Department data)
         {
-            return Guid.NewGuid();
-            //throw new NotImplementedException();
+            if (data == null) return Guid.Empty;
+            _dbContext.Departments.Add(data);
+            _dbContext.SaveChanges();
+            return data.Id;
         }
 
        public IList<Department> GetAll()
         {
-            return new List<Department>()
-            {
-                new Department()
-                {
-                    Id = Guid.NewGuid(),
-                    Description = "IT"
-                },
-                new Department()
-                {
-                    Id = Guid.NewGuid(),
-                    Description = "HR"
-                }
-            };
-            //throw new NotImplementedException();
+            return _dbContext.Departments.ToList();
         }
 
         public Department GetById(Guid id)
         {
-            return new Department()
-            {
-                Id = id,
-                Description = "IT"
-            };
+            return _dbContext.Departments.FirstOrDefault(dp => dp.Id == id);
         }
 
         public bool Update(Department data)
         {
-            return true;
-            //throw new NotImplementedException();
+            if (data != null)
+            {
+                Department department = GetById(data.Id);
+                if (department != null)
+                {
+                    department.Description = data.Description;
+                    return _dbContext.SaveChanges() > 0;
+                }
+            }
+
+            return false;
         }
 
         public bool Delete(Guid id)
         {
-            return  true;
-            //throw new NotImplementedException();
+            Department department = GetById(id);
+            if (department == null) return false;
+            _dbContext.Departments.Remove(department);
+            return _dbContext.SaveChanges() > 0;
         }
-
-
-
 
     }
 }

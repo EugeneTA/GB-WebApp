@@ -1,70 +1,71 @@
 ﻿using EmployeeService.Models;
+using EmployeeService.Models.Dto;
+using EmployeeServiceData;
 
 namespace EmployeeService.Services.Repositories.Impl
 {
     public class EmployeeRepository : IEmployeeRepository
     {
-        public int Create(Employee data)
+        private readonly EmployeeServiceDbContext _dbContext;
+
+        public EmployeeRepository(EmployeeServiceDbContext dbContext)
         {
-            return data.Id;
-            //throw new NotImplementedException();
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public bool Delete(int id)
+        public int Create(Employee data)
         {
-            return true;
-            //throw new NotImplementedException();
+            if (data == null) return -1;
+            //_dbContext.Employees.Add(new Employee() { 
+            //DepartmentId = data.DepartmentId,
+            //EmployeeTypeId = data.EmployeeTypeId,
+            //FirstName = data.FirstName,
+            //Surname = data.Surname,
+            //Patronymic  = data.Patronymic,
+            //Salary = data.Salary
+            //});
+            _dbContext.Employees.Add(data);
+            _dbContext.SaveChanges();
+            return data.Id;
         }
 
         public IList<Employee> GetAll()
         {
-            return new List<Employee>()
-            {
-                new Employee()
-                {
-                    Id = 0,
-                    DepartmentId = Guid.NewGuid(),
-                    EmployeeTypeId = 0,
-                    FirstName = "Иванов",
-                    Surname = "Иван",
-                    Patronymic = "Иванович",
-                    Salary = 100000
-                },
-                new Employee()
-                {
-                    Id = 1,
-                    DepartmentId = Guid.NewGuid(),
-                    EmployeeTypeId = 2,
-                    FirstName = "Петров",
-                    Surname = "Петр",
-                    Patronymic = "петровия",
-                    Salary = 200000
-                }
-
-            };
-            //throw new NotImplementedException();
+            return _dbContext.Employees.ToList();
         }
 
         public Employee GetById(int id)
         {
-            return new Employee()
-            {
-                Id = id,
-                DepartmentId = Guid.NewGuid(),
-                EmployeeTypeId = 0,
-                FirstName = "Иванов",
-                Surname = "Иван",
-                Patronymic = "Иванович",
-                Salary = 100000
-            };
-
-            //throw new NotImplementedException();
+            return _dbContext.Employees.FirstOrDefault(empl => empl.Id == id);
         }
 
         public bool Update(Employee data)
         {
-            return true;
-            //throw new NotImplementedException();
+            if (data != null)
+            {
+                Employee employee = GetById(data.Id);
+                if (employee != null)
+                {
+                    employee.DepartmentId = employee.DepartmentId == data.DepartmentId ? employee.DepartmentId : data.DepartmentId;
+                    employee.EmployeeTypeId = employee.EmployeeTypeId == data.EmployeeTypeId ? employee.EmployeeTypeId : data.EmployeeTypeId;
+                    employee.FirstName = employee.FirstName == data.FirstName ? employee.FirstName : data.FirstName;
+                    employee.Surname = employee.Surname == data.Surname ? employee.Surname : data.Surname;
+                    employee.Patronymic = employee.Patronymic == data.Patronymic ? employee.Patronymic : data.Patronymic;
+                    employee.Salary = employee.Salary == data.Salary ? employee.Salary : data.Salary;
+
+                    return _dbContext.SaveChanges() > 0;
+                }
+            }
+
+            return false;
+        }
+
+        public bool Delete(int id)
+        {
+            Employee employee = GetById(id);
+            if (employee == null) return false;
+            _dbContext.Employees.Remove(employee);
+            return _dbContext.SaveChanges() > 0;
         }
     }
 }

@@ -1,9 +1,7 @@
-﻿namespace EmployeeService.Models
+﻿namespace EmployeeService.Models.Dto
 {
-    public class Employee
+    public class EmployeeCreateDto
     {
-        public int Id { get; set; }
-
         public Guid DepartmentId { get; set; }
 
         public int EmployeeTypeId { get; set; }

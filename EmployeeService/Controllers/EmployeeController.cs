@@ -4,6 +4,7 @@ using EmployeeService.Services.Repositories;
 using EmployeeService.Services.Repositories.Impl;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
+using EmployeeServiceData;
 
 namespace EmployeeService.Controllers
 {
@@ -36,9 +37,8 @@ namespace EmployeeService.Controllers
 
         #region Public Methods
 
-
         [HttpPost("employee-types/create")]
-        public ActionResult<int> CreateEmployee([FromBody] EmployeeDto employee)
+        public ActionResult<int> CreateEmployee([FromBody] EmployeeCreateDto employee)
         {
             return Ok(_employeeRepository.Create(_mapper.Map<Employee>(employee)));
         }
@@ -58,7 +58,7 @@ namespace EmployeeService.Controllers
         [HttpGet("employee-types/all")]
         public ActionResult<IList<EmployeeDto>> GetAllEmployees()
         {
-            return Ok(_employeeRepository.GetAll().Select(empl => _mapper.Map<EmployeeDto>(empl)).ToList());
+            return Ok(_employeeRepository.GetAll().ToList());
         }
 
         [HttpGet("employee-types/getbyid")]
