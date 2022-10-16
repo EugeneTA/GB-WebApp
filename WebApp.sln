@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeService", "Employee
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeServiceData", "EmployeeServiceData\EmployeeServiceData.csproj", "{6EBD3181-A8D3-4D8E-837E-0C7D2B4BF309}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JwtSample", "JwtSample\JwtSample.csproj", "{43E44AB1-BFD1-48E1-A147-656AFA1C13A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JwtSample", "JwtSample\JwtSample.csproj", "{43E44AB1-BFD1-48E1-A147-656AFA1C13A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountHelper", "AccountHelper\AccountHelper.csproj", "{D48E1AA8-0098-43AA-A5DE-CDEFA854D005}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{43E44AB1-BFD1-48E1-A147-656AFA1C13A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43E44AB1-BFD1-48E1-A147-656AFA1C13A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43E44AB1-BFD1-48E1-A147-656AFA1C13A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D48E1AA8-0098-43AA-A5DE-CDEFA854D005}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D48E1AA8-0098-43AA-A5DE-CDEFA854D005}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D48E1AA8-0098-43AA-A5DE-CDEFA854D005}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D48E1AA8-0098-43AA-A5DE-CDEFA854D005}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

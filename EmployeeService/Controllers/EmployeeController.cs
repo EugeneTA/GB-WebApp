@@ -5,9 +5,11 @@ using EmployeeService.Services.Repositories.Impl;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using EmployeeServiceData;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EmployeeService.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeeController : ControllerBase
