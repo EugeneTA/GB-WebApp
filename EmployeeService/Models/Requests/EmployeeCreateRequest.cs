@@ -1,6 +1,6 @@
-﻿namespace EmployeeService.Models.Dto
+﻿namespace EmployeeService.Models.Requests
 {
-    public class EmployeeCreateDto
+    public class EmployeeCreateRequest
     {
         public Guid DepartmentId { get; set; }
 

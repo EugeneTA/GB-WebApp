@@ -1,6 +1,8 @@
 ﻿using EmployeeService.Models.Dto;
 using EmployeeService.Models.Requests;
 using EmployeeService.Services;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -14,16 +16,24 @@ namespace EmployeeService.Controllers
     public class AuthenticateController : ControllerBase
     {
         private readonly IAuthenticateService _authenticateService;
+        private readonly IValidator<AuthenticationRequest> _authenticationRequestValidator;
 
-        public AuthenticateController(IAuthenticateService authenticateService)
+        public AuthenticateController(
+            IAuthenticateService authenticateService,
+            IValidator<AuthenticationRequest> authenticationRequestValidator)
         {
             _authenticateService = authenticateService;
+            _authenticationRequestValidator = authenticationRequestValidator;
         }
 
         [AllowAnonymous]
         [HttpPost("login")]
+        [ProducesResponseType(typeof(Dictionary<string, string[]>), StatusCodes.Status400BadRequest)]
         public IActionResult Login([FromBody] AuthenticationRequest authenticationRequest)
         {
+            ValidationResult validationResult = _authenticationRequestValidator.Validate(authenticationRequest);
+            if (validationResult.IsValid == false)
+                return BadRequest(validationResult.ToDictionary());
 
             AuthenticationResponse authenticationResponse = _authenticateService.Login(authenticationRequest);
             if (authenticationResponse.Status == Models.AuthenticationStatus.Success)

@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using EmployeeServiceData;
 using Microsoft.AspNetCore.Authorization;
+using FluentValidation;
+using FluentValidation.Results;
+using EmployeeService.Models.Requests;
 
 namespace EmployeeService.Controllers
 {
@@ -20,6 +23,8 @@ namespace EmployeeService.Controllers
         private readonly IEmployeeRepository _employeeRepository;
         private readonly ILogger<EmployeeController> _logger;
         private readonly IMapper _mapper;
+        private readonly IValidator<EmployeeCreateRequest> _employeeCreateRequestValidator;
+        private readonly IValidator<EmployeeDto> _employeeValidator;
 
         #endregion
 
@@ -28,11 +33,15 @@ namespace EmployeeService.Controllers
         public EmployeeController(
             IEmployeeRepository employeeRepository,
             ILogger<EmployeeController> logger,
-            IMapper mapper)
+            IMapper mapper,
+            IValidator<EmployeeCreateRequest> employeeCreateRequestValidator,
+            IValidator<EmployeeDto> employeeValidator)
         {
             _employeeRepository = employeeRepository;
             _logger = logger;
             _mapper = mapper;
+            _employeeCreateRequestValidator = employeeCreateRequestValidator;
+            _employeeValidator = employeeValidator;
         }
 
         #endregion
@@ -40,14 +49,22 @@ namespace EmployeeService.Controllers
         #region Public Methods
 
         [HttpPost("employee-types/create")]
-        public ActionResult<int> CreateEmployee([FromBody] EmployeeCreateDto employee)
+        public ActionResult<int> CreateEmployee([FromBody] EmployeeCreateRequest employee)
         {
+            ValidationResult validationResult = _employeeCreateRequestValidator.Validate(employee);
+            if (validationResult.IsValid == false)
+                return BadRequest(validationResult.ToDictionary());
+
             return Ok(_employeeRepository.Create(_mapper.Map<Employee>(employee)));
         }
 
         [HttpPut("employee-types/update")]
         public ActionResult<bool> UpdateEmployee([FromBody] EmployeeDto employee)
         {
+            ValidationResult validationResult = _employeeValidator.Validate(employee);
+            if (validationResult.IsValid == false)
+                return BadRequest(validationResult.ToDictionary());
+
             return Ok(_employeeRepository.Update(_mapper.Map<Employee>(employee)));
         }
 
