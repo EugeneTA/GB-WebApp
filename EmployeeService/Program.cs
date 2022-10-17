@@ -1,10 +1,15 @@
 using AutoMapper;
+using EmployeeService.Models.Dto;
+using EmployeeService.Models.Requests;
+using EmployeeService.Models.Validators;
 using EmployeeService.Services;
 using EmployeeService.Services.Repositories;
 using EmployeeService.Services.Repositories.Impl;
 using EmployeeServiceData;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -95,6 +100,15 @@ namespace EmployeeService
                     ClockSkew = TimeSpan.Zero
                 };
             });
+
+            #endregion
+
+            #region Configure FluentValidator
+
+            // ѕроверка поступающих данных в запросе
+            builder.Services.AddScoped<IValidator<AuthenticationRequest>, AuthenticationRequestValidator>();
+            builder.Services.AddScoped<IValidator<EmployeeCreateRequest>, EmployeeCreateRequestValidator>();
+            builder.Services.AddScoped<IValidator<EmployeeDto>, EmployeeValidator>();
 
             #endregion
 
