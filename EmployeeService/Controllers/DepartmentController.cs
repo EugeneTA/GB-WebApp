@@ -40,7 +40,7 @@ namespace EmployeeService.Controllers
 
 
         [HttpPost("create")]
-        public ActionResult<int> CreateDepartment([FromQuery] string description)
+        public ActionResult<Guid> CreateDepartment([FromQuery] string description)
         {
             return Ok(_departmentRepository.Create(new Department
             {
