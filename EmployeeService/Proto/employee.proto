@@ -1,0 +1,195 @@
+syntax = "proto3";
+
+option csharp_namespace = "EmployeeServiceProto";
+
+package EmployeeServiceProto;
+
+service DictionariesService{
+	
+	rpc CreateEmployeeType(CreateEmployeeTypeRequest) returns(CreateEmployeeTypeResponse);
+	rpc UpdateEmployeeType(UpdateEmployeeTypeRequest) returns(UpdateEmployeeTypeResponse);
+	rpc GetAllEmployeeTypes(GetAllEmployeeTypesRequest) returns(GetAllEmployeeTypesResponse);
+	rpc GetEmployeeTypeById(GetEmployeeTypeByIdRequest) returns(GetEmployeeTypeByIdResponse);
+	rpc DeleteEmployeeType(DeleteEmployeeTypeRequest) returns(DeleteEmployeeTypeResponse);
+
+}
+
+message CreateEmployeeTypeRequest{
+	string description = 1;
+}
+
+message CreateEmployeeTypeResponse{
+	int32 id = 1;
+}
+
+message UpdateEmployeeTypeRequest{
+	EmployeeType employeeType = 1;
+}
+
+message UpdateEmployeeTypeResponse{
+	bool operationResult = 1;
+}
+
+message GetAllEmployeeTypesRequest{
+
+}
+
+message GetAllEmployeeTypesResponse{
+	repeated EmployeeType employeeTypes = 1;
+}
+
+message GetEmployeeTypeByIdRequest{
+	int32 id = 1;
+}
+
+message GetEmployeeTypeByIdResponse{
+	EmployeeType employeeType = 1;
+}
+
+message DeleteEmployeeTypeRequest{
+	int32 id = 1;
+}
+
+message DeleteEmployeeTypeResponse{
+	bool operationResult = 1;
+}
+
+message EmployeeType{
+	int32 id = 1;
+	string description = 2;
+}
+
+
+
+service DepartmentService{
+
+	rpc CreateDepartment(CreateDepartmentRequest) returns(CreateDepartmentResponse);
+	rpc UpdateDepartment(UpdateDepartmentRequest) returns(UpdateDepartmentResponse);
+	rpc DeleteDepartment(DeleteDepartmentRequest) returns(DeleteDepartmentResponse);
+	rpc GetAllDepartments(GetAllDepartmentsRequest) returns(GetAllDepartmentsResponse);
+	rpc GetDepartmentById(GetDepartmentByIdRequest) returns(GetDepartmentByIdResponse);
+}
+
+message CreateDepartmentRequest{
+	string description = 1;
+}
+
+message CreateDepartmentResponse{
+	string id = 1; 
+}
+
+message UpdateDepartmentRequest{
+	DepartmentType departmentType = 1;
+}
+
+message UpdateDepartmentResponse{
+	bool operationResult = 1;
+}
+
+message DeleteDepartmentRequest{
+	string id = 1;
+}
+
+message DeleteDepartmentResponse{
+	bool operationResult = 1;
+}
+
+message GetAllDepartmentsRequest{
+
+}
+
+message GetAllDepartmentsResponse{
+	repeated DepartmentType departmentTypes = 1;
+}
+
+message GetDepartmentByIdRequest{
+	string id = 1;
+}
+
+message GetDepartmentByIdResponse{
+	DepartmentType departmentType = 1;
+}
+
+message DepartmentType{
+	string id = 1;
+	string description = 2;
+}
+
+
+service EmployeeGrpcService{
+
+	rpc CreateEmployee(CreateEmployeeRequest) returns(CreateEmployeeResponse);
+	rpc UpdateEmployee(UpdateEmployeeRequest) returns(UpdateEmployeeResponse);
+	rpc DeleteEmployee(DeleteEmployeeRequest) returns(DeleteEmployeeResponse);
+	rpc GetAllEmployees(GetAllEmployeesRequest) returns(GetAllEmployeesResponse);
+	rpc GetEmployeeById(GetEmployeeByIdRequest) returns(GetEmployeeByIdResponse);
+}
+
+message CreateEmployeeRequest{
+	string departmentId = 1;
+	int32 employeeTypeId = 2;
+	string firstName = 3;
+	string surname = 4;
+	string patronymic = 5;
+	DecimalValue salary = 6;
+}
+
+message CreateEmployeeResponse{
+	int32 id = 1;
+}
+
+message UpdateEmployeeRequest{
+	Employee employee = 1;
+}
+
+message UpdateEmployeeResponse{
+	bool operationResult = 1;
+}
+
+message DeleteEmployeeRequest{
+	int32 id = 1;
+}
+
+message DeleteEmployeeResponse{
+	bool operationResult = 1;
+}
+
+message GetAllEmployeesRequest{
+
+}
+
+message GetAllEmployeesResponse{
+	repeated Employee employees = 1;
+}
+
+message GetEmployeeByIdRequest{
+	int32 id = 1;
+}
+
+message GetEmployeeByIdResponse{
+	Employee employee = 1;
+}
+
+
+message Employee{
+	
+	int32 id = 1;
+	string departmentId = 2;
+	int32 employeeTypeId = 3;
+	string firstName = 4;
+	string surname = 5;
+	string patronymic = 6;
+	DecimalValue salary = 7;
+}
+
+
+// Example: 12345.6789 -> { units = 12345, nanos = 678900000 }
+message DecimalValue {
+
+    // Whole units part of the amount
+    int64 units = 1;
+
+    // Nano units of the amount (10^-9)
+    // Must be same sign as units
+    sfixed32 nanos = 2;
+}

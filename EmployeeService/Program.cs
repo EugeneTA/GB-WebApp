@@ -3,6 +3,7 @@ using EmployeeService.Models.Dto;
 using EmployeeService.Models.Requests;
 using EmployeeService.Models.Validators;
 using EmployeeService.Services;
+using EmployeeService.Services.gRPCServices;
 using EmployeeService.Services.Repositories;
 using EmployeeService.Services.Repositories.Impl;
 using EmployeeServiceData;
@@ -14,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NLog.Web;
+using System.Net;
 using System.Text;
 
 namespace EmployeeService
@@ -23,6 +25,15 @@ namespace EmployeeService
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.WebHost.ConfigureKestrel(options =>
+            {
+                options.Listen(IPAddress.Any, 5001, listenOptions =>
+                {
+                    listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1AndHttp2;
+                    listenOptions.UseHttps(@"c:\gbtestcert.pfx", "12345");
+                });
+            });
 
             // Add services to the container.
             #region Configure Automapper
@@ -35,6 +46,13 @@ namespace EmployeeService
 
             // Register our mapper with the app as singletone 
             builder.Services.AddSingleton(mapper);
+
+            #endregion
+
+            #region Configure gRPC
+
+            // 1. добавляем поддержк уработы с gRPC
+            builder.Services.AddGrpc();
 
             #endregion
 
@@ -114,7 +132,11 @@ namespace EmployeeService
 
             builder.Services.AddSingleton<IAuthenticateService, AuthenticateService>();
 
+
+            // Добавляем поодержку работы с контроллерами
             builder.Services.AddControllers();
+
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
@@ -155,14 +177,33 @@ namespace EmployeeService
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpLogging();
-
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
+            // 3.1 Стандартный HTTP логгер не работает с gGRPC. Будет ошибка.
+            //app.UseHttpLogging();
+
+            // 3.2 Обещали поправить в .Net 7
+            app.UseWhen(
+                ctx => ctx.Request.ContentType != "application/grpc",
+                builder =>
+                {
+                    builder.UseHttpLogging();
+
+                }
+                );
+
             app.MapControllers();
+
+            // 2. Добавляем gRPC сервисы
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGrpcService<DictionariesService>();
+                endpoints.MapGrpcService<DepartmentsService>();
+                endpoints.MapGrpcService<EmployeesService>();
+            });
 
             app.Run();
         }
