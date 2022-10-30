@@ -81,7 +81,7 @@ namespace EmployeeService.Controllers
         }
 
         [HttpGet("employee-types/getbyid")]
-        public ActionResult<EmployeeDto> GetEmployeebyId([FromQuery] int id)
+        public ActionResult<EmployeeDto> GetEmployeeById([FromQuery] int id)
         {
             Employee employee = _employeeRepository.GetById(id);
             return employee == null ? NotFound() : Ok(_mapper.Map<EmployeeDto>(employee));
